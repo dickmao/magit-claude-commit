@@ -1,0 +1,4 @@
+*.elc
+/deps
+/project-claude
+!/.claude
