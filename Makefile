@@ -59,11 +59,11 @@ endef
 project-claude/project-claude.el:
 	git clone --depth 1 https://github.com/commercial-emacs/project-claude.git
 
-project-claude/deps/archives/gnu/archive-contents: project-claude/project-claude.el
+project-claude/project-claude-generated.el: project-claude/project-claude.el
 	rm -rf deps
 	$(MAKE) -C project-claude INSTALLDIR="$(CURDIR)/deps" install
 
-deps/archives/gnu/archive-contents: project-claude/deps/archives/gnu/archive-contents
+deps/archives/gnu/archive-contents: project-claude/project-claude-generated.el
 	$(call install-recipe,$(CURDIR)/deps)
 	rm -rf deps/magit-claude-commit* # just keep deps
 
