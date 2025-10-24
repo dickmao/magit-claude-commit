@@ -35,7 +35,7 @@ dist: dist-clean
 	( \
 	set -e; \
 	PKG_NAME=`$(EMACS) -batch -L . -l magit-claude-commit-package --eval "(princ (magit-claude-commit-package-name))"`; \
-	rsync -R $(ELSRC) $${PKG_NAME} && \
+	rsync -R $(ELSRC) commit-prompt.txt $${PKG_NAME} && \
 	tar cf $${PKG_NAME}.tar $${PKG_NAME}; \
 	)
 

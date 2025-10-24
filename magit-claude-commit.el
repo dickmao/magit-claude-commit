@@ -30,8 +30,8 @@
   "Return a string."
   (let ((prompt-file (expand-file-name
 		      "commit-prompt.txt"
-		      (file-name-directory (or load-file-name
-					       buffer-file-name)))))
+		      (file-name-directory
+		       (locate-library "magit-claude-commit")))))
     (with-temp-buffer
       (call-process project-claude/invocation nil t nil
                     "-p" (with-temp-buffer
