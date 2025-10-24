@@ -77,8 +77,15 @@ install-project-claude: project-claude/project-claude.el
 
 .PHONY: install
 install:
-	2>/dev/null @$(EMACS) --batch -f package-initialize -l project-claude \
+	( \
+	set -e; \
+	INSTALL_PATH=$(INSTALLDIR); \
+	if [[ "$${INSTALL_PATH}" == /* ]]; then INSTALL_PATH=\"$${INSTALL_PATH}\"; fi; \
+	1>/dev/null 2>/dev/null $(EMACS) --batch \
+	  --eval "(setq package-user-dir (expand-file-name $${INSTALL_PATH}))" \
+	  -f package-initialize -l project-claude \
 	  --eval "(or (version-list-<= '(0 0 1) \
 	   (package-desc-version (car (alist-get 'project-claude package-alist)))) \
-	   (error))" || $(MAKE) INSTALLDIR=$(INSTALLDIR) install-project-claude
+	   (error))" || $(MAKE) INSTALLDIR=$(INSTALLDIR) install-project-claude \
+	)
 	$(call install-recipe,$(INSTALLDIR))
