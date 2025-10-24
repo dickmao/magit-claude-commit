@@ -61,7 +61,7 @@ project-claude/project-claude.el:
 
 project-claude/project-claude-generated.el: project-claude/project-claude.el
 	rm -rf deps
-	$(MAKE) -C project-claude INSTALLDIR="$(CURDIR)/deps" install
+	$(MAKE) -C project-claude INSTALLDIR=$(CURDIR)/deps install
 
 deps/archives/gnu/archive-contents: project-claude/project-claude-generated.el
 	$(call install-recipe,$(CURDIR)/deps)
@@ -69,7 +69,7 @@ deps/archives/gnu/archive-contents: project-claude/project-claude-generated.el
 
 .PHONY: clean
 clean: dist-clean
-	git clean -dffX # ff because emacs-libvterm has a git subdir
+	git clean -dffX # ff because project-claude has a git subdir
 
 .PHONY: install-project-claude
 install-project-claude: project-claude/project-claude.el

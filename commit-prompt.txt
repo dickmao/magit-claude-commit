@@ -1,0 +1,3 @@
+Generate a git commit message for the changes I've staged.  Consult my
+various CLAUDE.md for commit styling cues, if any.  Your response is
+transcribed verbatim, so provide ONLY the commit message.
