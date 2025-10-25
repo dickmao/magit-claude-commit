@@ -5,6 +5,10 @@ Install
 git clone https://github.com/dickmao/magit-claude-commit.git
 make -C magit-claude-commit install
 
+Then add,
+(require 'magit-claude-commit)
+to your .emacs or init.el
+
 -----
 Usage
 -----
