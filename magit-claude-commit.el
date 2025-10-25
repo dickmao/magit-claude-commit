@@ -38,21 +38,22 @@
                            (insert-file-contents prompt-file)
                            (buffer-string)))
       (goto-char (point-min))
-      (when (re-search-forward magit-claude-commit//fence nil t)
-        (forward-line 1)
-        (let ((start (point)))
-          (when (re-search-forward magit-claude-commit//fence nil t)
-            (beginning-of-line)
-            (buffer-substring-no-properties start (point))))))))
+      (if (re-search-forward magit-claude-commit//fence nil t)
+	  (progn
+            (forward-line 1)
+            (let ((start (point)))
+              (re-search-forward magit-claude-commit//fence)
+	      (beginning-of-line)
+	      (buffer-substring start (point))))
+	;; an error occurred or no staged changes, just print it
+	(buffer-string)))))
 
 (defun magit-claude-commit//insert ()
-  (let ((commit-message (magit-claude-commit//get)))
-    (save-excursion
-      (goto-char (point-min))
-      (insert commit-message)
-      (unless (looking-at "\n\n")
-        (insert "\n")))))
+  (save-excursion
+    (goto-char (point-min))
+    (insert (magit-claude-commit//get))))
 
+(remove-hook 'git-commit-setup-hook #'magit-claude-commit//insert)
 (add-hook 'git-commit-setup-hook #'magit-claude-commit//insert)
 
 (provide 'magit-claude-commit)
