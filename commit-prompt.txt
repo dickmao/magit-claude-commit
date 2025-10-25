@@ -1,3 +1,4 @@
-Generate a git commit message for the changes I've staged.  Consult my
-various CLAUDE.md for commit styling cues, if any.  Fence off the
-commit message with ```.
+Generate a git commit message for the staged changes, or if none are
+staged, then generate for the unstaged changes. Consult my various
+CLAUDE.md for commit styling cues, if any.  Fence off the commit
+message with ```.

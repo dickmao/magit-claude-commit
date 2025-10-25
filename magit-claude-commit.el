@@ -4,7 +4,7 @@
 ;; Author: dickmao
 ;; Version: 0.0.1
 ;; URL: https://github.com/commercial-emacs/magit-claude-commit
-;; Package-Requires: ((magit "4.0.0") (project-claude "0.0.1"))
+;; Package-Requires: ((magit "4.0.0"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,39 +22,54 @@
 ;; along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.
 
 (require 'git-commit)
-(require 'project-claude)
+(require 'project-claude nil t)
 
-(defconst magit-claude-commit//fence "^```")
+(defgroup magit-claude-commit nil
+  "Defgroups are bullshit."
+  :group 'tools
+  :prefix "magit-claude-commit-")
 
-(defun magit-claude-commit//get ()
+(defcustom magit-claude-commit-invocation
+  (or (bound-and-true-p project-claude/invocation)
+      "claude")
+  "Command line shell invocation."
+  :group 'magit-claude-commit
+  :type 'string)
+
+(defconst magit-claude-commit-fence "^```")
+
+(defun magit-claude-commit-get ()
   "Return a string."
   (let ((prompt-file (expand-file-name
 		      "commit-prompt.txt"
 		      (file-name-directory
 		       (locate-library "magit-claude-commit")))))
     (with-temp-buffer
-      (call-process project-claude/invocation nil t nil
+      (call-process magit-claude-commit-invocation nil t nil
                     "-p" (with-temp-buffer
                            (insert-file-contents prompt-file)
                            (buffer-string)))
       (goto-char (point-min))
-      (if (re-search-forward magit-claude-commit//fence nil t)
+      (if (re-search-forward magit-claude-commit-fence nil t)
 	  (progn
             (forward-line 1)
             (let ((start (point)))
-              (re-search-forward magit-claude-commit//fence)
+              (re-search-forward magit-claude-commit-fence)
 	      (beginning-of-line)
 	      (buffer-substring start (point))))
-	;; an error occurred or no staged changes, just print it
+	;; print the error
 	(buffer-string)))))
 
-(defun magit-claude-commit//insert ()
-  (save-excursion
-    (goto-char (point-min))
-    (insert (magit-claude-commit//get))))
+(defun magit-claude-commit-insert ()
+  (interactive)
+  (message "Generating...")
+  (insert (magit-claude-commit-get))
+  (when (looking-at-p "\n\n")
+    (delete-char 1))
+  (message "Generating...done"))
 
-(remove-hook 'git-commit-setup-hook #'magit-claude-commit//insert)
-(add-hook 'git-commit-setup-hook #'magit-claude-commit//insert)
+(define-key git-commit-mode-map (kbd "C-c C-M-i")
+	    #'magit-claude-commit-insert)
 
 (provide 'magit-claude-commit)
 
